@@ -36,37 +36,21 @@ public class Task2_BalancedString {
      */
     public static void main(String[] args) {
 
-        System.out.println("Result: " + isAStringBalanced("azABaabza"));
-        System.out.println("Result: " + isAStringBalanced("TacoCat"));
-        System.out.println("Result: " + isAStringBalanced("AcZCbaBz"));
-        System.out.println("Result: " + isAStringBalanced("abcdefghijklmnopqrstuvwxyz"));
+        System.out.println("Result: " + isStringBalanced("azABaabza"));
+        System.out.println("Result: " + isStringBalanced("TacoCat"));
+        System.out.println("Result: " + isStringBalanced("AcZCbaBz"));
+        System.out.println("Result: " + isStringBalanced("abcdefghijklmnopqrstuvwxyz"));
 
         // Some random tests
-        System.out.println("Result: " + isAStringBalanced("mKAbBatAcZCbaBzD"));
-        System.out.println("Result: " + isAStringBalanced("mKAbBatAcZCbaBzDaAK"));
+        System.out.println("Result: " + isStringBalanced("mKAbBatAcZCbaBzD"));
+        System.out.println("Result: " + isStringBalanced("mKAbBatAcZCbaBzDaAK"));
 
     }
 
-    private static int isAStringBalanced(String S) {
+    private static int isStringBalanced(String S) {
         System.out.println("\ninput: " + S);
 
-        Set<Character> upperCaseChars = S.chars().filter(Character::isUpperCase).mapToObj(i -> (char) i).collect(Collectors.toSet());
-        System.out.println("upperCaseChars: " + upperCaseChars);
-
-        Set<Character> lowerCaseChars = S.chars().filter(Character::isLowerCase).mapToObj(i -> (char) i).collect(Collectors.toSet());
-        System.out.println("lowerCaseChars:" + lowerCaseChars);
-
-        Set<Character> upperCaseCharsNotRepeated = upperCaseChars.stream()
-                .filter(c -> !lowerCaseChars.contains(Character.toLowerCase(c)))
-                .collect(Collectors.toSet());
-
-        Set<Character> lowerCaseCharsNotRepeated = lowerCaseChars.stream()
-                .filter(i -> !upperCaseChars.contains(Character.toUpperCase(i)))
-                .collect(Collectors.toSet());
-
-        Set<Character> allCharsNotRepeated = Stream.of(upperCaseCharsNotRepeated, lowerCaseCharsNotRepeated)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
+        Set<Character> allCharsNotRepeated = findCharsNotRepeated(S);
         System.out.println("charsNotRepeated: " + allCharsNotRepeated);
 
         Set<String> potentialResults = new HashSet<>(Collections.singleton(S));
@@ -83,9 +67,29 @@ public class Task2_BalancedString {
                 .orElse(-1);
     }
 
-    private static Set<String> splitStrings(Set<String> strings, Character splitter) {
+    private static Set<Character> findCharsNotRepeated(String input) {
+        Set<Character> upperCaseChars = input.chars().filter(Character::isUpperCase).mapToObj(i -> (char) i).collect(Collectors.toSet());
+        System.out.println("upperCaseChars: " + upperCaseChars);
+
+        Set<Character> lowerCaseChars = input.chars().filter(Character::isLowerCase).mapToObj(i -> (char) i).collect(Collectors.toSet());
+        System.out.println("lowerCaseChars:" + lowerCaseChars);
+
+        Set<Character> upperCaseCharsNotRepeated = upperCaseChars.stream()
+                .filter(c -> !lowerCaseChars.contains(Character.toLowerCase(c)))
+                .collect(Collectors.toSet());
+
+        Set<Character> lowerCaseCharsNotRepeated = lowerCaseChars.stream()
+                .filter(c -> !upperCaseChars.contains(Character.toUpperCase(c)))
+                .collect(Collectors.toSet());
+
+        return Stream.of(upperCaseCharsNotRepeated, lowerCaseCharsNotRepeated)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+    }
+
+    private static Set<String> splitStrings(Set<String> stringSet, Character splitter) {
         Set<String> res = new HashSet<>();
-        for (String ss : strings) {
+        for (String ss : stringSet) {
             res.addAll(Arrays.stream(ss.split(splitter.toString())).collect(Collectors.toSet()));
         }
         return res;
