@@ -47,6 +47,13 @@ public class Task2_BalancedString {
 
     }
 
+    /**
+     * Given a string S, returns the length of the shortest balanced fragment.
+     * Fragments of size 1 are not taken into account.
+     *
+     * @param S input string to be processed
+     * @return length of the shortest balanced fragment, -1 if none
+     */
     private static int isStringBalanced(String S) {
         System.out.println("\ninput: " + S);
 
@@ -67,6 +74,13 @@ public class Task2_BalancedString {
                 .orElse(-1);
     }
 
+    /**
+     * Given a string, find those characters that appear only 1 time (keeping case-sensitive).
+     * E.g.Given "atAcZCbaBzD", returns "t, D"
+     *
+     * @param input string to be processed
+     * @return set containing the chars that are not repeated in the string
+     */
     private static Set<Character> findCharsNotRepeated(String input) {
         Set<Character> upperCaseChars = input.chars().filter(Character::isUpperCase).mapToObj(i -> (char) i).collect(Collectors.toSet());
         System.out.println("upperCaseChars: " + upperCaseChars);
@@ -87,12 +101,23 @@ public class Task2_BalancedString {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Given a set of string, divides each string stored in the set by the provided char,
+     * keeping those that are not divisible.
+     * E.g.Given "AbBatAcZCbaBzDa" and the splitter "t", returns "AbBa, AcZCbaBzDa"
+     * E.g.Given "AbBa, AcZCbaBzDa" and the splitter "D", returns "AbBa, AcZCbaBz, a"
+     *
+     * @param stringSet set of string to be processed
+     * @param splitter  char with which the strings will be divided
+     * @return set of strings, it contains the strings that are not divisible
+     * and the new ones generated after division
+     */
     private static Set<String> splitStrings(Set<String> stringSet, Character splitter) {
-        Set<String> res = new HashSet<>();
+        Set<String> result = new HashSet<>();
         for (String ss : stringSet) {
-            res.addAll(Arrays.stream(ss.split(splitter.toString())).collect(Collectors.toSet()));
+            result.addAll(Arrays.stream(ss.split(splitter.toString())).collect(Collectors.toSet()));
         }
-        return res;
+        return result;
     }
 
 }
